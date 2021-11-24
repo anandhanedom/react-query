@@ -7,12 +7,35 @@ const fetchSuperheroes = async () => {
 };
 
 export const RQSuperHeroesPage = () => {
-  const { isLoading, data, isError, error } = useQuery(
+  const onSuccess = (data) => {
+    console.log("Perform side effects after data fetching", data);
+  };
+
+  const onError = (err) => {
+    console.log("Perform side effects after encountering an error", err);
+  };
+
+  const { isLoading, data, isError, error, refetch, isFetching } = useQuery(
     "super-heroes",
-    fetchSuperheroes
+    fetchSuperheroes,
+    // {
+    //   cacheTime: 300000, // default
+    //   staleTime: 0, // default
+    //   refetchOnMount: true, // default
+    //   refetchOnWindowFocus: true, // default
+    //   refetchInterval: false, // default - provide ms here
+    //   refetchIntervalInBackground: false, // default
+    // }
+    // {
+    //   enabled: false,
+    // }
+    {
+      onSuccess,
+      onError,
+    }
   );
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return <h2>Loading...</h2>;
   }
 
@@ -23,6 +46,7 @@ export const RQSuperHeroesPage = () => {
   return (
     <>
       <h2>React Query Super Heroes Page</h2>
+      <button onClick={refetch}>Fetch heroes</button>
       {data && data.map((hero) => <div key={hero.name}>{hero.name}</div>)}
     </>
   );
