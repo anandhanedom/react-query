@@ -12,7 +12,7 @@ export const RQSuperHeroPage = () => {
 
   if (isError) {
     return <h2>{error.message}</h2>;
-  }
+  } 
 
   return (
     <div>
